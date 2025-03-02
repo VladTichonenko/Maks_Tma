@@ -1,0 +1,491 @@
+/* Основной стиль для контейнера */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Убираем градиент */
+    color: #fff;
+    min-height: 100vh; /* Обеспечивает заполнение всей высоты экрана */
+    display: flex;
+    flex-direction: column;
+    max-width: 100vh;
+}
+
+/* Контейнер */
+.container {
+    flex: 1; /* Контейнер занимает оставшееся пространство */
+    padding: 20px;
+    position: relative;
+}
+
+/* Стили для заголовка */
+.header {
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: space-between; /* Равномерное распределение содержимого */
+    align-items: center; /* Выравнивание по центру по вертикали */
+}
+
+.balance {
+    flex-grow: 1; /* Занимает доступное пространство */
+}
+
+.balance h1 {
+    font-size: 28px;
+    margin: 10px 0;
+}
+
+
+.hamburger-menu {
+    width: 25px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    border-radius: 2px;
+}
+
+/* Стили для кнопок действий */
+.actions {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.actions button {
+    background-color: #4c8cff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Стили для вкладок */
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    border-top: 3px solid #4c8cff;
+}
+
+.tabs .tab {
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.tabs .tab.active {
+    color: #4c8cff;
+    border-bottom: 2px solid #4c8cff;
+}
+
+/* Стили для содержимого вкладок */
+.tab-content {
+    display: none;
+    padding: 15px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Стили для бокового меню */
+.side-menu {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 250px;
+    height: 100%;
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 20px;
+    transition: left 0.3s;
+    z-index: 100;
+}
+
+.side-menu .menu-content p {
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.side-menu.show {
+    left: 0;
+}
+
+/* Стили для нижней навигации */
+
+/* Стили для нижней навигации (фиксированная панель) */
+ /* Стили для нижней навигации */
+ .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 65px;
+    background-color: #1e1e1e;
+    border-top: 2px solid #4c8cff;
+}
+
+.nav-item {
+    color: #4c8cff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav-item.active {
+    color: #ffffff;
+}
+
+.nav-item:hover {
+    color: #ffffff;
+}
+
+
+
+
+/* Стили для кнопок в вкладке Crypto */
+#crypto-content {
+    max-height: calc(100vh - 200px); /* Вычитаем высоту панели и других элементов */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    padding: 15px;
+    margin-bottom: 60px; /* Оставляем место для фиксированной нижней панели */
+    justify-content: center; /* Центрируем содержимое по горизонтали */
+    align-items: center; /* Центрируем содержимое по вертикали */
+}
+.crypto-buttons {
+    display: flex;
+    flex-direction: column; /* Располагаем кнопки вертикально */
+    align-items: center;    /* Центрируем кнопки */
+    margin-top: 30px;
+}
+
+.crypto-btn {
+    background-color: #000; /* Цвет фона кнопки */
+    color: #fff; /* Цвет текста */
+    border: 2px solid #4c8cff; /* Цвет и стиль границы */
+    border-radius: 20px; /* Скругление углов */
+    width: 90%; /* Фиксированная ширина */
+    max-width: 300px; /* Максимальная ширина */
+    height: 80px; /* Фиксированная высота */
+    text-align: center; /* Выравнивание текста по центру */
+    display: flex;
+    flex-direction: column; /* Расположение элементов внутри кнопки вертикально */
+    justify-content: center; /* Центрируем элементы по вертикали */
+    align-items: center; /* Центрируем элементы по горизонтали */
+    cursor: pointer; /* Курсор для кликабельности */
+    gap: 10px; /* Расстояние между элементами внутри кнопки */
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Отступ между кнопками */
+}
+
+.crypto-btn:hover {
+    background-color: #4c8cff; /* Цвет фона при наведении */
+    color: #fff; /* Цвет текста при наведении */
+}
+
+.crypto-btn h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.crypto-btn p {
+    margin: 0;
+    font-size: 14px;
+    color: #ccc; /* Цвет описания */
+}
+
+
+
+
+
+/* Стили для кнопок в разделе DeFi */
+.defi-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.defi-btn {
+    background-color: #333; /* Темно-серый фон */
+    color: #fff; /* Белый текст */
+    border: 2px solid #4c8cff; /* Голубая обводка */
+    border-radius: 30px; /* Овальная форма */
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.defi-btn:hover {
+    background-color: #4c8cff; /* Голубой фон при наведении */
+}
+
+.defi-icon {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.defi-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    width: 100%;
+}
+
+.defi-info h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.defi-info hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 5px 0;
+}
+
+.description {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.price {
+    font-size: 14px;
+    color: #4c8cff; /* Голубой цвет для цены */
+    margin: 5px 0;
+}
+
+/* Trading Mode Panel */
+.trading-mode {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    margin: 15px 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
+
+ /* Основной стиль для панели выбора режима */
+ .trading-mode-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #2a2d3b;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: 1px solid #4c8cff;
+    
+}
+
+/* Стиль для иконки и текста в панели */
+.trading-mode-panel .icon {
+    background-color: #4c8cff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.trading-mode-panel .arrow {
+    font-size: 14px;
+}
+
+/* Блок, который появляется внизу экрана при выборе режима */
+.trading-options-block {
+    position: fixed;
+    bottom: -100%; /* Скрыто внизу экрана */
+    left: 0;
+    width: 100%;
+    background-color: #1e2130;
+    padding: 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border: 1px solid #4c8cff;
+    transition: bottom 0.3s ease; /* Анимация выезда */
+    z-index: 1000;
+    width: 89%;
+}
+
+/* Заголовок блока */
+.trading-options-block h3 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+
+/* Стиль для каждого режима в блоке */
+.option {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+}
+
+.option:last-child {
+    border-bottom: none;
+}
+
+.option .icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 12px;
+}
+
+/* Стили для больших радиокнопок */
+.option input[type="radio"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #4c8cff;
+    background-color: #333;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+.option input[type="radio"]:checked {
+    background-color: #4c8cff;
+}
+
+/* Текст и описание опций */
+.option-content {
+    color: #ccc;
+}
+
+.option-title {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.option-description {
+    font-size: 14px;
+}
+
+/* Кнопка "Закрыть" */
+.close-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4c8cff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Показать блок внизу экрана */
+.trading-options-block.show {
+    bottom: 0; /* Поднимается наверх экрана */
+}
+
+
+
+#home-icon {
+    color: #fff;
+}
+
+
+/* Медиазапросы для адаптивности */
+@media screen and (max-width: 768px) {
+    .crypto-btn {
+        width: 31%;
+    }
+
+    .social .social-item {
+        width: 35%;  /* 2 элемента в строке */
+    }
+}
+
+
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-content {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  }
+  .close-modal {
+    background-color: #4c8cff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+  }
+  .close-modal:hover {
+    background-color: #357ae8;
+  }
+  /* Стили для изменения бургер-меню */
+  .hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg);
+    position: absolute;
+    top: 50%;
+  }
+  .hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 50%;
+  }
+
+  .hamburger-menu.cross i {
+    font-size: 44px;
+    color: #fff;
+}

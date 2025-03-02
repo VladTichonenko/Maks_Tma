@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайт с анимацией карточки</title>
+    <link rel="stylesheet" href="glav.css">
+</head>
+<body>
+    <!-- Центральное изображение, размещено выше -->
+    <div class="center-image">
+        <img src="масон.jpg" alt="Центральное изображение">
+    </div>
+
+    <!-- Первая карточка -->
+    <div class="card card-1">
+        <img src="картинка.jpg" alt="Первое изображение на карточке" class="card-image">
+        <div class="card-content">
+            <p>Это текст первой карточки. что-то написал просто так , чтобы было .</p>
+            <button class="next-button" onclick="showSecondCard()">Далее</button>
+        </div>
+    </div>
+
+    <!-- Вторая карточка -->
+    <div class="card card-2">
+        <img src="картинка.jpg" alt="Второе изображение на карточке" class="card-image">
+        <div class="card-content">
+            <p>Это текст второй карточки. Спасибо за внимание!</p>
+            <button class="next-button" onclick="showThirdCard()">Далее</button>
+        </div>
+    </div>
+
+    <!-- Третья карточка с кнопкой "Начать" -->
+    <div class="card card-3">
+        <div class="card-content">
+            <p>Давай начинать! Нажмите "Начать", чтобы завершить обучение.</p>
+            <button class="start-button" onclick="startTransition()">Начать</button>
+        </div>
+    </div>
+
+    <script src="glav.js"></script>
+</body>
+</html>

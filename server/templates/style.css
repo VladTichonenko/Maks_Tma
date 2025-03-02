@@ -1,0 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box;
+  color: #ffffff;
+  text-decoration: none;
+  list-style: none;
+}
+body {
+  width: 100%;
+  height: 100vh;
+  background: #141414;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+:root {
+  --clr: #4c8cff;
+  --clr1: #007bff;
+}
+.text {
+  display: flex;
+  position: relative;
+  font-size: 30px;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--clr);
+  text-shadow: 0 0 20px var(--clr);
+}
+.text::after {
+  content: '';
+  width: 80%;
+  height: 50px;
+  background: var(--clr);
+  position: absolute;
+  top: 100%;
+  transform: perspective(1em) rotateX(40deg) scale(1.0, 0.5);
+  filter: blur(1em);
+}
+#loading {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  animation: scale 5s linear infinite;
+}
+#loading span {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-left: 3px solid var(--clr1);
+  border-right: 3px solid var(--clr);
+  border-radius: 37% 61% 63% 35% / 42% 34% 64% 56%;
+  animation: rotate 3s linear infinite;
+}
+#loading span:nth-child(1) {
+  animation: rotate 6s linear infinite reverse;
+}
+#loading span:nth-child(2) {
+  animation: rotate 9s linear infinite;
+}
+#loading span:nth-child(3) {
+  animation: rotate 12s linear infinite reverse;
+}
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes scale {
+  0% {
+    width: 400px;
+    height: 400px;
+  }
+  50% {
+    width: 600px;
+    height: 600px;
+  }
+  100% {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+/* Анимация для точек */
+.dot {
+  display: inline-block;
+  opacity: 0;  /* Начальная невидимость */
+  animation: dotAnimation 1.5s forwards;  /* Применяем анимацию */
+}
+
+.dot:nth-child(1) {
+  animation-delay: 0s;  /* Первая точка появляется сразу */
+}
+.dot:nth-child(2) {
+  animation-delay: 0.5s;  /* Вторая точка появляется через 0.5 сек */
+}
+.dot:nth-child(3) {
+  animation-delay: 1s;  /* Третья точка появляется через 1 сек */
+}
+
+@keyframes dotAnimation {
+  0% {
+    opacity: 0; /* Сначала точка невидима */
+  }
+  100% {
+    opacity: 1; /* В конце точка появляется */
+  }
+}

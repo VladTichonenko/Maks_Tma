@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-history" id="chat-history"></div>
+        <input type="text" id="question" placeholder="Ваш вопрос" />
+        <button id="send-button">Отправить</button>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+<style>
+   /* style.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 20px;
+}
+
+.chat-container {
+    width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+}
+
+.chat-history {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.chat-history p {
+    margin: 5px 0;
+}
+
+.chat-history strong {
+    color: #007bff;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #007bff;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:focus {
+    outline: none;
+}
+</style>
+
+<script>
+    // script.js
+document.addEventListener('DOMContentLoaded', () => {
+    const userId = 1; // Замените на реальный user_id
+    const chatHistoryDiv = document.getElementById('chat-history');
+    const questionInput = document.getElementById('question');
+    const sendButton = document.getElementById('send-button');
+
+    async function loadChatHistory() {
+        const response = await fetch(`/chat/${userId}`);
+        const history = await response.json();
+        chatHistoryDiv.innerHTML = '';
+        history.forEach(([vopros, otvet]) => {
+            chatHistoryDiv.innerHTML += `<p><strong>Вы:</strong> ${vopros}</p>`;
+            chatHistoryDiv.innerHTML += `<p><strong>Админ:</strong> ${otvet}</p>`;
+        });
+    }
+
+    sendButton.addEventListener('click', async () => {
+        const question = questionInput.value;
+        const answer = "Это ответ на ваш вопрос."; // Здесь можно добавить логику для генерации ответа
+        await fetch('/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ admin: "Admin", user_id: userId, question, answer })
+        });
+        questionInput.value = '';
+        loadChatHistory();
+    });
+
+    loadChatHistory();
+});
+</script>

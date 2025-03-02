@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Криптовалюты</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #openModalBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content {
+            background-color: #1e1e1e;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover, .close:focus {
+            color: white;
+        }
+
+        #searchInput {
+            width: 95%;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+
+        .crypto-list, .exchange-list {
+            max-height: 400px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .crypto-item, .exchange-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            cursor: pointer;
+        }
+
+        .crypto-item img, .exchange-item img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .crypto-item .crypto-name, .exchange-item .exchange-name {
+            font-size: 18px;
+            flex-grow: 1;
+        }
+
+        .crypto-item .crypto-price, .exchange-item .staking-rate {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="openModalBtn">Показать криптовалюты</button>
+
+    <div id="modal" class="modal">
+        <div class="modal-content" id="modalContent">
+            <span class="close">&times;</span>
+            <input type="text" id="searchInput" placeholder="Поиск криптовалюты..." style="margin-right: 55%;">
+            <div id="cryptoList" class="crypto-list"></div>
+            <p id="noResults" style="display: none; color: red;">Монета не найдена</p>
+        </div>
+    </div>
+
+    <script>
+       const cryptocurrencies = [
+            { name: 'Bitcoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png' },
+            { name: 'Ethereum', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+            { name: 'XRP', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png' },
+            { name: 'Tether', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+            { name: 'Solana', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' },
+            { name: 'TRON', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png' },  // Добавлен TRON
+            { name: 'Dogecoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png' } // Добавлен Dogecoin
+        ];
+
+        const exchanges = [
+            { name: 'Kraken' , staking: '5.2%' },
+            { name: 'MEXC', staking: '4.0%' },
+            { name: 'Bitget', staking: '4.0%' },
+        ];
+
+        function displayCryptocurrencies(cryptoArray) {
+            const cryptoList = document.getElementById('cryptoList');
+            if (!cryptoList) return;  // Проверяем, существует ли элемент
+            cryptoList.innerHTML = '';
+            cryptoArray.forEach(crypto => {
+                const item = document.createElement('div');
+                item.className = 'crypto-item';
+                item.innerHTML = `
+                    <img src="${crypto.logo}" alt="${crypto.name} logo">
+                    <div class="crypto-name">${crypto.name}</div>
+                `;
+                item.onclick = () => showCryptoDetails(crypto);
+                cryptoList.appendChild(item);
+            });
+        }
+
+        function showCryptoDetails(crypto) {
+            const modalContent = document.getElementById('modalContent');
+            if (!modalContent) return;  // Проверяем, существует ли элемент
+            modalContent.innerHTML = `
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>${crypto.name}</h2>
+                <img src="${crypto.logo}" alt="${crypto.name} logo" width="64">
+                <div id="exchangeList" class="exchange-list"></div>
+                <button class="back-button" id="backButton" style="width: 200px;">Назад</button>
+            `;
+            displayExchanges();
+
+            // Назначаем обработчик для кнопки назад
+            const backButton = document.getElementById('backButton');
+            backButton.onclick = function () {
+                // Показать список криптовалют
+                displayCryptocurrencies(cryptocurrencies);
+
+                // Отобразить основной список
+                const modal = document.getElementById('modal');
+                modal.style.display = 'block';
+            };
+        }
+
+        function displayExchanges() {
+            const exchangeList = document.getElementById('exchangeList');
+            if (!exchangeList) return;
+            exchangeList.innerHTML = '';
+            exchanges.forEach(exchange => {
+                const item = document.createElement('div');
+                item.className = 'exchange-item';
+                item.innerHTML = `
+                    <div class="exchange-name">${exchange.name}</div>
+                    <div class="staking-rate">${exchange.staking}</div>
+                `;
+                exchangeList.appendChild(item);
+            });
+        }
+
+        // Открытие и закрытие модального окна
+        const modal = document.getElementById('modal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementsByClassName('close')[0];
+
+        openModalBtn.onclick = function() {
+            modal.style.display = 'block';
+            displayCryptocurrencies(cryptocurrencies);
+        };
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        closeModalBtn.onclick = closeModal;
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Поиск по названию криптовалюты
+const searchInput = document.getElementById('searchInput');
+searchInput.oninput = function() {
+    const query = searchInput.value.toLowerCase();
+    const filteredCryptos = cryptocurrencies.filter(crypto =>
+        crypto.name.toLowerCase().includes(query)
+    );
+    if (filteredCryptos.length > 0) {
+        displayCryptocurrencies(filteredCryptos);
+        document.getElementById('noResults').style.display = 'none';
+    } else {
+        document.getElementById('cryptoList').innerHTML = '';
+        document.getElementById('noResults').style.display = 'block';
+    }
+};
+    </script>
+</body>
+</html>

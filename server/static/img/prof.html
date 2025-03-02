@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+        }
+
+        header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #111;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-info span {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .profile-info strong {
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .notification {
+    font-size: 24px;
+    color: #4c8cff;
+    cursor: pointer;
+    position: fixed; /* Делаем элемент фиксированным */
+    top: 20px; /* Отступ сверху */
+    right: 20px; /* Отступ справа */
+    z-index: 1000; /* Приоритет отображения поверх других элементов */
+}
+
+
+        .balance-card {
+            margin: 20px;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .balance-card h2 {
+            font-size: 24px;
+            margin: 0;
+            color: #fff;
+        }
+
+        .balance-card .currency {
+            font-size: 14px;
+            color: #aaa;
+            margin: 10px 0;
+        }
+
+        .balance-card .virtual-card {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .features {
+            margin: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .feature-card {
+            background-color: #111;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card i {
+            font-size: 24px;
+            color: #4c8cff;
+        }
+
+        .feature-card span {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .tab-menu {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            border-bottom: 2px solid #111;
+        }
+
+        .tab-menu div {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #bbb;
+            position: relative;
+        }
+
+        .tab-menu div.active {
+            color: #fff;
+        }
+
+        .tab-menu div.active::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #4c8cff;
+        }
+
+        .tab-content {
+    margin: 20px;
+    padding: 20px;
+    background-color: #111;
+    border-radius: 10px;
+    text-align: center;
+    max-height: 320px; /* Set a reasonable max-height */
+    overflow-y: auto; /* Enables vertical scrolling */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #4c8cff #111;
+    height: 500px; /* Add height to ensure the content exceeds the max height for scrolling */
+}
+
+/* Для Chrome, Edge */
+.tab-content::-webkit-scrollbar {
+    width: 8px; /* Ширина полосы прокрутки */
+}
+
+.tab-content::-webkit-scrollbar-thumb {
+    background-color: #4c8cff; /* Цвет бегунка */
+    border-radius: 5px; /* Скругление бегунка */
+}
+
+.tab-content::-webkit-scrollbar-track {
+    background-color: #111; /* Цвет трека */
+}
+
+        .tab-content.hidden {
+            display: none;
+        }
+
+        .tab-content .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background-color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #aaa;
+            border-radius: 10px;
+        }
+
+        .profile-info-block {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #555;
+            padding: 10px 0;
+        }
+
+        .profile-info-block span {
+            color: #bbb;
+        }
+
+        
+        /* Новая панель нижней навигации */
+        .bottom-bar {
+            position: fixed;
+            bottom: 65px;  /* Добавляем отступ, чтобы поднять панель выше */
+            left: 0;
+            width: 100%;
+            background-color: #111;
+            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .bottom-bar button {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bottom-bar button i {
+            font-size: 24px;
+            color: #4c8cff;
+            margin-bottom: 5px;
+        }
+
+        .scan-view {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .camera-simulation {
+            width: 80%;
+            height: 60%;
+            border: 4px solid #4c8cff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .camera-simulation video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .camera-simulation span {
+            color: #fff;
+            font-size: 18px;
+        }
+
+
+         /* Панель нижней навигации с иконками */
+         .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 65px;
+            background-color: #1e1e1e;
+            border-top: 2px solid #4c8cff;
+        }
+
+        .nav-item {
+            color: #4c8cff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+        .nav-item:hover {
+            color: #ffffff;
+        }
+
+
+        /* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal {
+    background-color: #4c8cff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.close-modal:hover {
+    background-color: #357ae8;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="profile">
+            <img src="https://via.placeholder.com/50" alt="Profile Picture">
+            <div class="profile-info">
+                <span>Welcome Back!</span>
+                <strong>@Vlad Tichonenko</strong>
+            </div>
+        </div>
+        <div class="notification">
+            <i class="fa-solid fa-arrow-right" id="back"></i>
+        </div>
+    </header>
+
+    <div class="balance-card">
+        <h2>$15,392.75</h2>
+        <div class="currency">USD - US Dollar</div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card" id="add-money-feature">
+            <i class="fas fa-wallet"></i>
+            <span onclick="add()">Add Money</span>
+        </div>
+    
+        <div class="feature-card">
+            <i class="fa-solid fa-code-compare"></i>
+            <span>Send Money</span>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-hand-holding-usd"></i>
+            <span>Request Money</span>
+        </div>
+        <div class="feature-card">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            <span> <h1> </h1>Currency exchange</span>
+        </div>
+    </div>
+
+    <div class="tab-menu">
+        <div class="tab active" data-target="my-qr">My QR</div>
+        <div class="tab" data-target="earn">Earn</div>
+        <div class="tab" data-target="profile">Profile</div>
+    </div>
+
+    <div class="tab-content" id="my-qr">
+        <div class="qr-placeholder">
+            <img src="йк.png" alt="QR Code" style="max-width: 100%; max-height: 100%;">
+        </div>
+    </div>
+    
+
+    <div class="tab-content hidden" id="earn">
+        <h2>Coming Soon</h2>
+    </div>
+
+    <div class="tab-content hidden" id="profile">
+        <div class="profile-info-block">
+            <span>Full Name:</span>
+            <span>Тихоненко Владислав Олегович</span>
+        </div>
+        <div class="profile-info-block">
+            <span>Nickname:</span>
+            <span>@Vlad_Tichonenko</span>
+        </div>
+        <div class="profile-info-block">
+            <span>Verification:</span>
+            <span>Verified</span>
+        </div>
+        <div class="profile-info-block">
+            <span>Language:</span>
+            <span>English</span>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button id="send-action">
+            <i class="fas fa-paper-plane"></i>
+            <span>Send</span>
+        </button>
+        <button id="receive-action">
+            <i class="fa-solid fa-sitemap"></i>
+            <span>Friend</span>
+        </button>
+        <button id="scan-action">
+            <i class="fas fa-qrcode"></i>
+            <span>Scan</span>
+        </button>
+    </div>
+
+    <!-- Scan QR Code Simulation -->
+    <div class="scan-view" id="scan-view">
+        <div class="camera-simulation">
+            <video id="camera-stream" autoplay></video>
+        </div>
+    </div>
+
+     <!-- Нижняя навигация с иконками -->
+     <nav class="bottom-nav">
+        <div class="nav-item"><i class="fa-solid fa-house" id="home-icon"></i></div>
+        <div class="nav-item" id="open-chart"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="nav-item" id="open-search"><i class="fa-regular fa-newspaper"></i></div>
+        <div class="nav-item" id="folow"><i class="fa-solid fa-star"></i></div>
+    </nav>
+
+
+<!-- Модальное окно -->
+<!-- Модальное окно для Send Money -->
+<div class="modal" id="sendMoneyModal">
+    <div class="modal-content">
+        <i class="fa-solid fa-passport"style="font-size: 36px; color: #4c8cff; margin-bottom: 10px;"></i>
+        <p id="sendMoneyText">For verified users only</p>
+        <button class="close-modal" id="closeSendMoneyModal">close</button>
+    </div>
+</div>
+
+<!-- Модальное окно для Request Money -->
+<div class="modal" id="requestMoneyModal">
+    <div class="modal-content">
+        <i class="fa-solid fa-passport" style="font-size: 36px; color: #4c8cff; margin-bottom: 10px;"></i>
+        <p id="requestMoneyText">For verified users only</p>
+        <button class="close-modal" id="closeRequestMoneyModal">close</button>
+    </div>
+</div>
+
+<!-- Модальное окно для Pay Bills -->
+<div class="modal" id="payBillsModal">
+    <div class="modal-content">
+        <i class="fa-regular fa-star fa-beat-fade" style="font-size: 36px; color: #4c8cff; margin-bottom: 10px;"></i>
+        <p id="payBillsText">Get the best rate on the market!</p>
+        <button class="close-modal" id="closePayBillsModal">close</button>
+    </div>
+</div>
+
+<!-- Модальное окно для Send -->
+<div class="modal" id="sendModal">
+    <div class="modal-content">
+        <i class="fa-solid fa-passport" style="font-size: 36px; color: #4c8cff; margin-bottom: 10px;"></i>
+        <p id="sendText">For verified users only</p>
+        <button class="close-modal" id="closeSendModal">close</button>
+    </div>
+</div>
+
+
+<!-- Модальное окно для Send -->
+<div class="modal" id="Friend">
+    <div class="modal-content">
+        <i class="fa-solid fa-gift fa-bounce" style="font-size: 50px; color: #4c8cff; margin-bottom: 10px;"></i>
+        <p id="sendText">Participate in the referral program and receive prizes</p>
+        <button class="close-modal" id="closeFriend">close</button>
+    </div>
+</div>
+
+<!-- Модальное окно -->
+<div id="modal1" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-button" id="close-modal">&times;</span>
+        <p>Coming Soon</p>
+    </div>
+</div>
+
+<!-- Модальное окно -->
+<div id="addModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Add Money</h2>
+        <p>Enter the amount you want to add:</p>
+        <input type="number" placeholder="Amount" style="padding: 10px; width: 80%; border-radius: 5px;">
+        <button id="closeAddModal" class="close-modal" style="margin-top: 10px;">Close</button>
+    </div>
+</div>
+
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const target = tab.getAttribute('data-target');
+                contents.forEach(content => {
+                    if (content.id === target) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        const scanAction = document.getElementById('scan-action');
+        const scanView = document.getElementById('scan-view');
+        const cameraStream = document.getElementById('camera-stream');
+
+        scanAction.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                cameraStream.srcObject = stream;
+                scanView.style.display = 'flex';
+            } catch (err) {
+                console.error('Error accessing camera: ', err);
+            }
+        });
+
+        scanView.addEventListener('click', () => {
+            const stream = cameraStream.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            scanView.style.display = 'none';
+        });
+
+
+        document.getElementById('back').addEventListener('click', function() {
+    window.location.href = 'index1.html';
+});
+
+document.getElementById('home-icon').addEventListener('click', function() {
+    window.location.href = 'index1.html';
+});
+
+document.getElementById('open-search').addEventListener('click', function() {
+    window.location.href = 'graf.html';
+});
+
+document.getElementById('open-chart').addEventListener('click', function() {
+    window.location.href = 'Chart.html';
+});
+
+document.getElementById('folow').addEventListener('click', function() {
+    window.location.href = 'folow.html';
+});
+
+
+// Получаем кнопки и модальные окна
+const sendMoneyButton = document.querySelector('.feature-card:nth-child(2)');
+const requestMoneyButton = document.querySelector('.feature-card:nth-child(3)');
+const payBillsButton = document.querySelector('.feature-card:nth-child(4)');
+const sendButton = document.getElementById('send-action');
+const FriendButton = document.getElementById('receive-action');
+
+const sendMoneyModal = document.getElementById('sendMoneyModal');
+const requestMoneyModal = document.getElementById('requestMoneyModal');
+const payBillsModal = document.getElementById('payBillsModal');
+const sendModal = document.getElementById('sendModal');
+const Friend = document.getElementById('Friend');
+
+const closeSendMoneyModal = document.getElementById('closeSendMoneyModal');
+const closeRequestMoneyModal = document.getElementById('closeRequestMoneyModal');
+const closePayBillsModal = document.getElementById('closePayBillsModal');
+const closeSendModal = document.getElementById('closeSendModal');
+const closeFriend = document.getElementById('closeFriend');
+
+// Открытие модального окна для "Send Money"
+sendMoneyButton.addEventListener('click', () => {
+    sendMoneyModal.style.display = 'flex';
+});
+
+// Открытие модального окна для "Request Money"
+requestMoneyButton.addEventListener('click', () => {
+    requestMoneyModal.style.display = 'flex';
+});
+
+// Открытие модального окна для "Pay Bills"
+payBillsButton.addEventListener('click', () => {
+    payBillsModal.style.display = 'flex';
+});
+
+// Открытие модального окна для "Send"
+sendButton.addEventListener('click', () => {
+    sendModal.style.display = 'flex';
+});
+
+// Открытие модального окна для "Friend"
+FriendButton.addEventListener('click', () => {
+    Friend.style.display = 'flex';
+});
+
+// Закрытие модальных окон
+closeSendMoneyModal.addEventListener('click', () => {
+    sendMoneyModal.style.display = 'none';
+});
+
+closeRequestMoneyModal.addEventListener('click', () => {
+    requestMoneyModal.style.display = 'none';
+});
+
+closePayBillsModal.addEventListener('click', () => {
+    payBillsModal.style.display = 'none';
+});
+
+closeSendModal.addEventListener('click', () => {
+    sendModal.style.display = 'none';
+});
+
+closeFriend.addEventListener('click', () => {
+    Friend.style.display = 'none';
+});
+
+// Закрытие модального окна при клике вне окна
+window.addEventListener('click', (e) => {
+    if (e.target === sendMoneyModal) {
+        sendMoneyModal.style.display = 'none';
+    }
+    if (e.target === requestMoneyModal) {
+        requestMoneyModal.style.display = 'none';
+    }
+    if (e.target === payBillsModal) {
+        payBillsModal.style.display = 'none';
+    }
+    if (e.target === sendModal) {
+        sendModal.style.display = 'none';
+    }
+    if (e.target === Friend) {
+        Friend.style.display = 'none';
+    }
+});
+
+
+
+// Получаем кнопку и модальное окно для Add Money
+const addMoneyButton = document.getElementById('add-action');
+const addMoneyModal = document.getElementById('addMoneyModal');
+const closeAddMoneyModal = document.getElementById('closeAddMoneyModal');
+
+// Открытие модального окна для Add Money
+addMoneyButton.addEventListener('click', () => {
+    addMoneyModal.style.display = 'flex';
+});
+
+// Закрытие модального окна для Add Money
+closeAddMoneyModal.addEventListener('click', () => {
+    addMoneyModal.style.display = 'none';
+});
+
+// Закрытие модального окна при клике вне окна
+window.addEventListener('click', (e) => {
+    if (e.target === addMoneyModal) {
+        addMoneyModal.style.display = 'none';
+    }
+});
+
+
+
+// Получаем элементы
+const featureCard = document.getElementById('add-money-feature');
+const modal = document.getElementById('modal1');
+const closeModal = document.getElementById('close-modal');
+
+// Открываем модальное окно
+featureCard.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+});
+
+// Закрываем модальное окно
+closeModal.addEventListener('click', () => {
+    modal.classList.add('hidden');
+});
+
+// Закрытие модального окна при клике вне его
+modal.addEventListener('click', (event) => {
+    if (event.target === modal) {
+        modal.classList.add('hidden');
+    }
+});
+
+
+
+    </script>
+</body>
+</html>

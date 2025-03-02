@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Chart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    /* Основные стили для страницы */
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Панель выбора пары на всю ширину */
+    .symbol-select-container {
+      width: 100%;
+      background-color: #333;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 2px solid #4c8cff;
+    }
+
+    .symbol-select-container label {
+      color: #4c8cff;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    #symbolSelect {
+      padding: 5px;
+      font-size: 16px;
+      background-color: #333;
+      color: #4c8cff;
+      border: 1px solid #4c8cff;
+      border-radius: 4px;
+    }
+
+    /* Стили для TradingView графика */
+    .tradingview-widget-container {
+      flex-shrink: 0;
+      height: 70%; /* График занимает 70% высоты экрана */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Стили для контейнера кнопок */
+    .button-container {
+      flex-shrink: 0;
+      height: 15%; /* Кнопки занимают оставшиеся 30% */
+      display: flex;
+      justify-content: center; /* Центрируем кнопки по горизонтали */
+      align-items: center; /* Центрируем кнопки по вертикали */
+      gap: 15px; /* Расстояние между кнопками */
+    }
+
+    /* Стили для кнопок */
+    /* Общие стили для всех кнопок */
+.trade-button {
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  text-align: center;
+}
+
+/* Увеличенная зелёная кнопка Trade */
+#tradeBtn {
+  background-color: rgb(58, 154, 58);
+  color: #fff;
+  font-size: 22px;
+  width: 170px;
+  height: 50px;
+}
+
+/* Уменьшенные красные кнопки */
+#addBtn, #reviewBtn {
+  background-color: #4c8cff;
+  color: #fff;
+  font-size: 16px;
+  width: 100px;
+  height: 40px;
+} 
+
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 65px;
+      background-color: #1e1e1e;
+      border-top: 2px solid #4c8cff;
+    }
+
+    .nav-item {
+      color: #4c8cff;
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .nav-item.active {
+      color: #ffffff;
+    }
+
+    .nav-item:hover {
+      color: #ffffff;
+    }
+
+    /* Стили для бокового меню */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 250px;
+      height: 100%;
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 20px;
+      transition: left 0.3s;
+      z-index: 100;
+    }
+
+    .side-menu .menu-content p {
+      margin: 20px 0;
+      cursor: pointer;
+    }
+
+    .side-menu.show {
+      left: 0;
+    }
+
+    /* Стили для кнопки бургер */
+    .burger-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 101;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+    }
+
+    .burger-btn div {
+      width: 100%;
+      height: 4px;
+      background-color: #fff;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .burger-btn i {
+      display: none; /* Скрываем крестик по умолчанию */
+      font-size: 30px; /* Увеличиваем размер крестика */
+      color: white;
+    }
+
+    /* Когда меню открыто, показываем крестик */
+    .burger-btn.active div {
+      opacity: 0;
+    }
+
+    .burger-btn.active i {
+      display: block; /* Показываем крестик */
+    }
+
+  
+  </style>
+</head>
+<body>
+  <!-- Кнопка бургер для открытия бокового меню -->
+  <div class="burger-btn" id="burger-btn">
+    <div></div>
+    <div></div>
+    <div></div>
+    <i class="fa-solid fa-xmark"></i> <!-- Крестик, скрыт по умолчанию -->
+  </div>
+
+  <!-- Боковое меню -->
+  <div class="side-menu" id="side-menu">
+    <div class="menu-content">
+      <p id="settings" onclick="location.href='graf.html'">Referal</p>
+            <p id="help" onclick="location.href='result.html'">Help</p>            
+            <p id="bitry-link">BiTry-Studio <i class="fa-solid fa-code"></i></p>
+    </div>
+  </div>
+
+  <!-- Панель выбора криптовалютной пары -->
+  <div class="symbol-select-container">
+    <label for="symbolSelect"><i class="fa-solid fa-arrow-right-arrow-left"></i></label>
+    <select id="symbolSelect" onchange="changeSymbol(this.value)">
+      <option value="BINANCE:IOTAUSD">IOTA/USD</option>
+      <option value="BINANCE:BTCUSD">BTC/USD</option>
+      <option value="BINANCE:ETHUSD">ETH/USD</option>
+      <option value="BINANCE:BNBUSD">BNB/USD</option>
+    </select>
+  </div>
+
+  <!-- Контейнер для графика -->
+  <div class="tradingview-widget-container">
+    <div id="tradingview_chart" class="chart"></div>
+  </div>
+  
+
+  <!-- Навигационная панель внизу -->
+  <nav class="bottom-nav">
+    <div class="nav-item" id="open-glav" onclick="location.href='index1.html'"><i class="fa-solid fa-house" id="home-icon"></i></div>
+    <div class="nav-item active" id="open-chart"><i class="fa-solid fa-chart-line"></i></div>
+    <div class="nav-item"  onclick="location.href='graf.html'"><i class="fa-solid fa-star"></i></div>
+    <div class="nav-item" id="open-search" onclick="location.href='result.html'"><i class="fa-regular fa-envelope"></i></div>
+  </nav>
+
+
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+    function loadChart(symbol) {
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": symbol,
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "Dark",
+        "style": "1",
+        "locale": "en",
+        "container_id": "tradingview_chart"
+      });
+    }
+
+    loadChart("BINANCE:IOTAUSD");
+
+    function changeSymbol(newSymbol) {
+      document.getElementById("tradingview_chart").innerHTML = "";
+      loadChart(newSymbol);
+    }
+
+   
+
+    document.getElementById('burger-btn').addEventListener('click', function() {
+      // Переключаем класс 'active' для кнопки бургер
+      this.classList.toggle('active');
+      // Переключаем отображение бокового меню
+      document.getElementById('side-menu').classList.toggle('show');
+    });
+
+    document.getElementById('bitry-link').addEventListener('click', function () {
+      window.open('https://t.me/ITtbcstudio', '_blank');
+    });
+
+    document.getElementById('folow').addEventListener('click', function() {
+      window.location.href = 'folow.html';
+    });
+
+    document.getElementById('open-glav').addEventListener('click', function() {
+      window.location.href = 'index1.html';
+    });
+
+    document.getElementById('open-search').addEventListener('click', function() {
+      window.location.href = 'graf.html';
+    });
+
+    document.getElementById('prof').addEventListener('click', function() {
+      window.location.href = 'prof.html';
+    });
+  </script>
+</body>
+</html>
