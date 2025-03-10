@@ -336,7 +336,7 @@
 
               </div>
           </div>
-          <div class="crypto-price"> <span id="price-btc">3</span></div>
+          <div class="crypto-price"> <span id="price-btc">Loading...</span></div>
           <div class="crypto-footer">
              <span class="change-percent down"></span>
           </div>
@@ -347,7 +347,7 @@
                   <h3><i class="fa-solid fa-trophy"></i> Top 1</h3>
               </div>
           </div>
-          <div class="crypto-price"><span id="price-eth">Vlad_Tichonenko</span></div>
+          <div class="crypto-price"><span id="price-eth">Loading...</span></div>
           <div class="crypto-footer">
           </div>
 
@@ -380,9 +380,9 @@
 
   <!-- News list -->
 <div class="news-container">
+    <!-- <div class="news-item" data-news="Vlad_Tichonenko" data-content="balance: 0">Vlad_Tichonenko</div>
     <div class="news-item" data-news="Vlad_Tichonenko" data-content="balance: 0">Vlad_Tichonenko</div>
-    <div class="news-item" data-news="Vlad_Tichonenko" data-content="balance: 0">Vlad_Tichonenko</div>
-    <div class="news-item" data-news="Vlad_Tichonenko" data-content="balance: 0">Vlad_Tichonenko</div>
+    <div class="news-item" data-news="Vlad_Tichonenko" data-content="balance: 0">Vlad_Tichonenko</div> -->
 
 
   </div>
@@ -402,6 +402,45 @@
 </div> -->
 
     <script>
+// Получаем данные из localStorage
+const referralData = JSON.parse(localStorage.getItem('referralData'));
+
+// Проверяем, что данные есть и отображаем их
+if (referralData) {
+  document.getElementById('username').innerText = referralData.username;
+  document.getElementById('user_id').innerText = referralData.user_id;
+  document.getElementById('balance').innerText = referralData.balance;
+  document.getElementById('referral_count').innerText = referralData.referral_count;
+  document.getElementById('top_referral').innerText = `${referralData.top_referral.name} - ${referralData.top_referral.balance} coins`;
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+            const referralData = JSON.parse(localStorage.getItem("referralData"));
+
+            // Если данные существуют
+            if (referralData) {
+                // Отображаем количество рефералов
+                document.getElementById('price-btc').innerText = referralData.referralCount;
+
+                // Отображаем топ-реферала
+                document.getElementById('price-eth').innerText = referralData.topReferral.name;
+
+                // Отображаем реферальную ссылку
+                document.getElementById('referral-link').innerText = referralData.referralLink;
+
+                // Отображаем список рефералов
+                const newsContainer = document.querySelector('.news-container');
+                referralData.referralsList.forEach(referral => {
+                    const newsItem = document.createElement('div');
+                    newsItem.classList.add('news-item');
+                    newsItem.dataset.news = referral.name;
+                    newsItem.dataset.content = `balance: ${referral.balance}`;
+                    newsItem.innerText = referral.name;
+                    newsContainer.appendChild(newsItem);
+                });
+            }
+        });
 
         const sideMenu = document.getElementById('side-menu');
         const overlay = document.getElementById('overlay');

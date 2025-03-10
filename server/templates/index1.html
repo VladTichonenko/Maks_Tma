@@ -27,6 +27,7 @@
         <!-- Баланс -->
         <div class="balance">
             <h1 id="balanceText"> ${{ balance }}</h1>
+
         </div>
         
         <!-- Кнопка "гамбургер" -->
@@ -50,9 +51,15 @@
         <!-- Выдвижной блок для выбора режима -->
         <div class="trading-options-block" id="tradingOptionsBlock">
             
-            <p id="modalText"><i class="fa-solid fa-user" style="color: #4c8cff;"> </i> My UserName: {{ username }}</p>
-            <p id="modalText"><i class="fa-solid fa-fingerprint" style="color: #4c8cff;"></i> My ID: {{ user_id }}</p>
-            <p id="modalText"><i class="fa-solid fa-wallet" style="color: #4c8cff;"></i> My Balance: ${{ balance }}</p>
+            <p id="usernameText">
+                <i class="fa-solid fa-user" style="color: #4c8cff;"></i> My UserName: <span id="username">Loading...</span>
+            </p>
+            <p id="userIdText">
+                <i class="fa-solid fa-fingerprint" style="color: #4c8cff;"></i> My ID: <span id="user_id">Loading...</span>
+            </p>
+            <p id="balanceText">
+                <i class="fa-solid fa-wallet" style="color: #4c8cff;"></i> My Balance: $<span id="balance">0</span>
+            </p>
             <button class="close-button" id="closeButton" >Close</button>
         </div>
 
@@ -76,7 +83,7 @@
                         <!-- <br><i class="fa-solid fa-circle-dollar-to-slot"style="font-size: 40px;"></i> Задаём размер в пикселях -->
                     </div>
                 </div>
-                <div class="crypto-btn">
+                <div class="crypto-btn2">
                     <div class="crypto-info">
 
                         <i class="fa-regular fa-copy" style="font-size: 40px;"></i>
@@ -102,7 +109,7 @@
               </button>
         </div>
 
-        <div class="tab-content" id="defi-content">
+        <!-- <div class="tab-content" id="defi-content">
             <div class="defi-buttons">
                 {% for post in posts %}
                 <div class="defi-btn" onclick="window.open('{{ post[2] }}', '_blank')" style="cursor: pointer;">
@@ -115,6 +122,12 @@
                     </div>
                 </div>
                 {% endfor %}
+            </div>
+        </div> -->
+
+        <div class="tab-content" id="defi-content">
+            <div class="defi-buttons" id="posts-container">
+                <!-- Посты загружаются сюда -->
             </div>
         </div>
         
@@ -158,6 +171,7 @@
             <div id="cryptoList" class="crypto-list"></div>
             <p id="noResults" style="display: none; color: red;">Монета не найдена</p>
         </div>
+        
     </div>
 
     
@@ -170,6 +184,59 @@
 </html>
 
 <script>
+
+function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const balance = getQueryParam("balance") || "0";
+        document.getElementById("balanceText").textContent = `$${balance}`;
+    });
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = getQueryParam("username") || "Guest";
+        const user_id = getQueryParam("user_id") || "Unknown";
+        const balance = getQueryParam("balance") || "0";
+
+        document.getElementById("username").textContent = username;
+        document.getElementById("user_id").textContent = user_id;
+        document.getElementById("balance").textContent = balance;
+    });
+
+
+    const postsString = getQueryParam("posts");
+    if (postsString) {
+        const posts = postsString.split("|").map(p => p.split("~"));
+        let container = document.getElementById("posts-container");
+        container.innerHTML = "";  // Очищаем перед добавлением новых
+
+        posts.forEach(post => {
+            let title = post[0], description = post[1], link = post[2], bonus = post[3];
+            let imgSrc = "../static/img/m.jpg";
+
+            if (link.includes("t.me")) imgSrc = "../static/img/tg.webp";
+            else if (link.includes("youtube.com")) imgSrc = "../static/img/yootube.png";
+
+            let postElement = document.createElement("div");
+            postElement.className = "defi-btn";
+            postElement.style.cursor = "pointer";
+            postElement.onclick = () => window.open(link, "_blank");
+
+            postElement.innerHTML = `
+                <img src="${imgSrc}" alt="Defi Icon" class="defi-icon">
+                <div class="defi-info">
+                    <h3>${title}</h3>
+                    <hr />
+                    <p class="description">${description}</p>
+                    <p class="price"><i class="fa-solid fa-coins"></i>${bonus}</p>
+                </div>
+            `;
+            container.appendChild(postElement);
+        });
+    }
 
 
 
@@ -218,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // Управление модальным окном
-const featureButtons = document.querySelectorAll('.crypto-btn');
+const featureButtons = document.querySelectorAll('.crypto-btn2');
 const featureModal = document.getElementById('featureModal');
 const closeFeatureModal = document.getElementById('closeFeatureModal');
 const modalText = document.getElementById('modalText');
@@ -533,111 +600,133 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   const cryptocurrencies = [
-            { name: 'Bitcoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png' },
-            { name: 'Ethereum', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
-            { name: 'XRP', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png' },
-            { name: 'Tether', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
-            { name: 'Solana', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' },
-            { name: 'TRON', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png' },  // Добавлен TRON
-            { name: 'Dogecoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png' } // Добавлен Dogecoin
-        ];
+    { name: 'Bitcoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png' },
+    { name: 'Ethereum', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png' },
+    { name: 'XRP', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png' },
+    { name: 'Tether', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/825.png' },
+    { name: 'Solana', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/5426.png' },
+    { name: 'TRON', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1958.png' },
+    { name: 'Dogecoin', logo: 'https://s2.coinmarketcap.com/static/img/coins/64x64/74.png' }
+];
 
-        const exchanges = [
-            { name: 'Kraken' , staking: '5.2%' },
-            { name: 'MEXC', staking: '4.0%' },
-            { name: 'Bitget', staking: '4.0%' },
-        ];
+const exchanges = [
+    { name: 'Kraken', staking: '5.2%' },
+    { name: 'MEXC', staking: '4.0%' },
+    { name: 'Bitget', staking: '4.0%' },
+];
 
-        function displayCryptocurrencies(cryptoArray) {
-            const cryptoList = document.getElementById('cryptoList');
-            if (!cryptoList) return;  // Проверяем, существует ли элемент
-            cryptoList.innerHTML = '';
-            cryptoArray.forEach(crypto => {
-                const item = document.createElement('div');
-                item.className = 'crypto-item';
-                item.innerHTML = `
-                    <img src="${crypto.logo}" alt="${crypto.name} logo">
-                    <div class="crypto-name">${crypto.name}</div>
-                `;
-                item.onclick = () => showCryptoDetails(crypto);
-                cryptoList.appendChild(item);
-            });
+function resetModal() {
+    const modalContent = document.getElementById('modalContentc');
+    modalContent.innerHTML = `
+        <span class="close" onclick="closeModal()">&times;</span>
+        <input type="text" id="searchInput" placeholder="Поиск криптовалюты..." style="margin-right: 55%;">
+        <div id="cryptoList" class="crypto-list"></div>
+        <p id="noResults" style="display: none; color: red;">Монета не найдена</p>
+    `;
+
+    const searchInput = document.getElementById('searchInput');
+    searchInput.oninput = function () {
+        const query = searchInput.value.toLowerCase();
+        const filteredCryptos = cryptocurrencies.filter(crypto =>
+            crypto.name.toLowerCase().includes(query)
+        );
+        if (filteredCryptos.length > 0) {
+            displayCryptocurrencies(filteredCryptos);
+            document.getElementById('noResults').style.display = 'none';
+        } else {
+            document.getElementById('cryptoList').innerHTML = '';
+            document.getElementById('noResults').style.display = 'block';
         }
+    };
 
-        function showCryptoDetails(crypto) {
-            const modalContent = document.getElementById('modalContentc');
-            if (!modalContent) return;  // Проверяем, существует ли элемент
-            modalContent.innerHTML = `
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2>${crypto.name}</h2>
-                <img src="${crypto.logo}" alt="${crypto.name} logo" width="64">
-                <div id="exchangeList" class="exchange-list"></div>
-                <button class="back-button" id="backButton" style="width: 200px;">Назад</button>
+    displayCryptocurrencies(cryptocurrencies);
+}
+
+function displayCryptocurrencies(cryptoArray) {
+    const cryptoList = document.getElementById('cryptoList');
+    cryptoList.innerHTML = '';
+    cryptoArray.forEach(crypto => {
+        const item = document.createElement('div');
+        item.className = 'crypto-item';
+        item.innerHTML = `
+            <img src="${crypto.logo}" alt="${crypto.name} logo">
+            <div class="crypto-name">${crypto.name}</div>
+        `;
+        item.onclick = () => showCryptoDetails(crypto);
+        cryptoList.appendChild(item);
+    });
+}
+
+function showCryptoDetails(crypto) {
+        const modalContent = document.getElementById('modalContentc');
+        modalContent.innerHTML = `
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>${crypto.name}</h2>
+            <img src="${crypto.logo}" alt="${crypto.name} logo" width="64">
+            <div id="exchangeList" class="exchange-list"></div>
+            <button class="back-button" onclick="resetModal()">Назад</button>
+        `;
+        displayExchanges();
+    }
+
+    function displayExchanges() {
+        const exchangeList = document.getElementById('exchangeList');
+        exchangeList.innerHTML = '';
+        exchanges.forEach(exchange => {
+            const item = document.createElement('div');
+            item.className = 'exchange-item';
+            item.innerHTML = `
+                <div class="exchange-name">${exchange.name}</div>
+                <div class="staking-rate">${exchange.staking}</div>
             `;
-            displayExchanges();
+            item.onclick = () => selectExchange(exchange);
+            exchangeList.appendChild(item);
+        });
+    }
 
-            // Назначаем обработчик для кнопки назад
-            const backButton = document.getElementById('backButton');
-            backButton.onclick = function () {
-                // Показать список криптовалют
-                displayCryptocurrencies(cryptocurrencies);
+    function selectExchange(exchange) {
+        const modalContent = document.getElementById('modalContentc');
+        modalContent.innerHTML = `
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>${exchange.name}</h2>
+            <p class="staking-rate">Ставка: ${exchange.staking}</p>
+            <button class="action-button" onclick="goToBuyPage('${exchange.name}')">I have an account</button>
+            <button class="action-button" onclick="goToSellPage('${exchange.name}')">I don't have an account</button>
+        `;
+    }
 
-                // Отобразить основной список
-                const modal = document.getElementById('modalc');
-                modal.style.display = 'block';
-            };
-        }
 
-        function displayExchanges() {
-            const exchangeList = document.getElementById('exchangeList');
-            if (!exchangeList) return;
-            exchangeList.innerHTML = '';
-            exchanges.forEach(exchange => {
-                const item = document.createElement('div');
-                item.className = 'exchange-item';
-                item.innerHTML = `
-                    <div class="exchange-name">${exchange.name}</div>
-                    <div class="staking-rate">${exchange.staking}</div>
-                `;
-                exchangeList.appendChild(item);
-            });
-        }
+    function goToBuyPage(exchangeName) {
+        window.location.href = `${exchangeName}yes.html`;
+    }
 
-        // Открытие и закрытие модального окна
-        const modal = document.getElementById('modalc');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementsByClassName('close')[0];
+    function goToSellPage(exchangeName) {
+        window.location.href = `${exchangeName}no.html`;
+    }
 
-        openModalBtn.onclick = function() {
-            modal.style.display = 'block';
-            displayCryptocurrencies(cryptocurrencies);
-        };
 
-        function closeModal() {
-            modal.style.display = 'none';
-        }
 
-        closeModalBtn.onclick = closeModal;
 
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        };
+document.getElementById('openModalBtn').onclick = function () {
+    document.getElementById('modalс').style.display = 'block';
+    resetModal();
+};
 
-        // Поиск по названию криптовалюты
-const searchInput = document.getElementById('searchInput');
-searchInput.oninput = function() {
-    const query = searchInput.value.toLowerCase();
-    const filteredCryptos = cryptocurrencies.filter(crypto =>
-        crypto.name.toLowerCase().includes(query)
-    );
-    if (filteredCryptos.length > 0) {
-        displayCryptocurrencies(filteredCryptos);
-        document.getElementById('noResults').style.display = 'none';
-    } else {
-        document.getElementById('cryptoList').innerHTML = '';
-        document.getElementById('noResults').style.display = 'block';
+const modal = document.getElementById('modalc');
+const openModalBtn = document.getElementById('openModalBtn');
+
+openModalBtn.onclick = function () {
+    modal.style.display = 'block';
+    resetModal();
+};
+
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+window.onclick = function (event) {
+    if (event.target == modal) {
+        closeModal();
     }
 };
 
@@ -718,7 +807,7 @@ searchInput.oninput = function() {
     border: 2px solid #4c8cff;
     border-radius: 30px;
     padding: 20px;
-   width: 80%;
+   width: 200px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -748,11 +837,45 @@ searchInput.oninput = function() {
     transition: background-color 0.3s, color 0.3s;
     margin-bottom: 20px; /* Отступ между кнопками */
 }
+.crypto-btn2 {
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #4c8cff;
+    font-size: 20px;
+    border-radius: 30px;
+    padding: 20px;
+   width: 45%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    margin-bottom: 20px; /* Отступ между кнопками */
+}
 
 .crypto-btn:hover {
     background-color: #4c8cff;
     color: #fff;
 }
+
+
+.action-button {
+            background-color: #007bff;
+            width: 160px;
+            height: 60px;
+            color: white;
+        }
+
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+
+        #selectedExchange {
+            margin-top: 20px;
+        }
 
 
 .earn-button {
@@ -1408,6 +1531,40 @@ body {
         .back-button {
             margin-top: 20px;
             padding: 10px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .selected-exchange {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .staking-rate-large {
+            font-size: 18px;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .account-button {
+            padding: 10px;
+            margin: 10px;
             background-color: #444;
             color: white;
             border: none;
