@@ -31,10 +31,11 @@ def get_staking_info():
         try:
             info = parser.get_staking_info(coin)
             if info:
-                # Добавляем оба значения APY
+
+                exchange_name, apy_diff = info
                 results.append({
-                    'exchange': info['exchange'],
-                    'apy': f"{info['min_apy']}-{info['max_apy']}%"
+                    'exchange': exchange_name,
+                    'apy': f"{apy_diff}%"
                 })
         except Exception as e:
             app.logger.error(f"Error processing {parser.__class__.__name__}: {str(e)}")
